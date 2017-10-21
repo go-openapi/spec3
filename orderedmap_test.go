@@ -12,8 +12,8 @@ import (
 	"github.com/brianvoe/gofakeit"
 )
 
-func randomData(ln int) (SortedMap, []string) {
-	d := SortedMap{
+func randomData(ln int) (OrderedMap, []string) {
+	d := OrderedMap{
 		data: make(map[string]interface{}, ln),
 	}
 	var keys []string
@@ -74,7 +74,7 @@ func TestSortedMap_Entries(t *testing.T) {
 }
 
 func TestSortedMap_GetSet(t *testing.T) {
-	var data SortedMap
+	var data OrderedMap
 	data.Set("first", "value1")
 	data.Set("second", "value2")
 	data.Set("first", "value3")
@@ -91,7 +91,7 @@ func TestSortedMap_GetSet(t *testing.T) {
 }
 
 func TestSortedMap_Delete(t *testing.T) {
-	var data SortedMap
+	var data OrderedMap
 	data.Set("first", "value1")
 	data.Set("second", "value2")
 	data.Set("third", "value3")
@@ -111,26 +111,26 @@ func TestSortedMap_Delete(t *testing.T) {
 }
 
 func TestSortedMap_String(t *testing.T) {
-	var data SortedMap
+	var data OrderedMap
 	data.Set("first", "value1")
 	data.Set("second", "value2")
 	data.Set("third", "value3")
 	assert.Equal(t, `{ first: "value1", second: "value2", third: "value3" }`, data.String())
 
-	var d SortedMap
+	var d OrderedMap
 	assert.Equal(t, "", d.String())
 
-	var d1 SortedMap
+	var d1 OrderedMap
 	d1.Set("first", "value1")
 	assert.Equal(t, `{ first: "value1" }`, d1.String())
 }
 
 func TestSortedMap_ToJSON(t *testing.T) {
-	var nested SortedMap
+	var nested OrderedMap
 	nested.Set("akey", "value")
 	nested.Set("other", "some")
 
-	var data SortedMap
+	var data OrderedMap
 	data.Set("first", "value1")
 	data.Set("second", 2)
 	data.Set("third", nested)
@@ -142,7 +142,7 @@ func TestSortedMap_ToJSON(t *testing.T) {
 }
 
 func TestSortedMap_FromJSON(t *testing.T) {
-	var data SortedMap
+	var data OrderedMap
 
 	js := `{"first":"value1","second":2,"third":{"akey":"value","other":"some"}}`
 	err := json.Unmarshal([]byte(js), &data)

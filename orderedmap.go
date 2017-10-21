@@ -17,39 +17,70 @@ type MapEntry struct {
 	Value interface{}
 }
 
+// Filter for deciding which keys make it into the sorted map
 type Filter func(string) bool
 
-func MatchAll(_ string) bool         { return true }
+// MatchAll keys, is used as default filter
+func MatchAll(_ string) bool { return true }
+
+// MatchExtension is used as filter for vendor extensions
 func MatchExtension(key string) bool { return strings.HasPrefix(key, "x-") }
 
+// Normalizer is used to normalize keys when writing to a map
 type Normalizer func(string) string
 
+// LowerCaseKeys lowercases keys when looking up in the map
 var LowerCaseKeys = strings.ToLower
 
-// SortedMap is a map that preserves insertion order
-type SortedMap struct {
-	data map[string]interface{}
-	keys []string
+// NOPNormalizer passes the key through, used as default
+func NOPNormalizer(s string) string { return s }
+
+// OrderedMap is a map that preserves insertion order
+type OrderedMap struct {
+	filter    Filter
+	normalize Normalizer
+	data      map[string]interface{}
+	keys      []string
 }
 
 // Len of the known keys
-func (s *SortedMap) Len() int {
+func (s *OrderedMap) Len() int {
 	return len(s.keys)
 }
 
 // GetOK get a value for the specified key, the boolean result indicates if the value was found or not
-func (s *SortedMap) GetOK(key string) (interface{}, bool) {
-	v, ok := s.data[key]
+func (s *OrderedMap) GetOK(key string) (interface{}, bool) {
+	v, ok := s.data[s.normalizeKey(key)]
 	return v, ok
 }
 
 // Get get a value for the specified key
-func (s *SortedMap) Get(key string) interface{} {
-	return s.data[key]
+func (s *OrderedMap) Get(key string) interface{} {
+	return s.data[s.normalizeKey(key)]
+}
+
+func (s *OrderedMap) normalizeKey(key string) string {
+	if s.normalize == nil {
+		s.normalize = NOPNormalizer
+	}
+
+	return s.normalize(key)
+}
+
+func (s *OrderedMap) allows(key string) bool {
+	if s.filter == nil {
+		s.filter = MatchAll
+	}
+	return s.filter(key)
 }
 
 // Set a value in the map
-func (s *SortedMap) Set(key string, value interface{}) bool {
+func (s *OrderedMap) Set(key string, value interface{}) bool {
+	key = s.normalizeKey(key)
+	if !s.allows(key) {
+		return false
+	}
+
 	if s.data == nil {
 		s.data = make(map[string]interface{})
 	}
@@ -62,7 +93,12 @@ func (s *SortedMap) Set(key string, value interface{}) bool {
 }
 
 // Delete a value from the map
-func (s *SortedMap) Delete(key string) bool {
+func (s *OrderedMap) Delete(k string) bool {
+	key := s.normalizeKey(k)
+	if !s.allows(key) {
+		return false
+	}
+
 	_, ok := s.data[key]
 	if !ok {
 		return false
@@ -74,6 +110,7 @@ func (s *SortedMap) Delete(key string) bool {
 			s.keys = append(s.keys[:i], s.keys[i+1:]...)
 		}
 	}
+
 	if len(s.keys) == 0 {
 		s.data = nil
 		s.keys = nil
@@ -82,12 +119,12 @@ func (s *SortedMap) Delete(key string) bool {
 }
 
 // Keys in the order of addition to the map
-func (s *SortedMap) Keys() []string {
+func (s *OrderedMap) Keys() []string {
 	return s.keys[:]
 }
 
 // Values in the order of addition to the map
-func (s *SortedMap) Values() []interface{} {
+func (s *OrderedMap) Values() []interface{} {
 	values := make([]interface{}, len(s.keys))
 	for i, k := range s.keys {
 		values[i] = s.data[k]
@@ -96,7 +133,7 @@ func (s *SortedMap) Values() []interface{} {
 }
 
 // Entries in the order of addition to the map
-func (s *SortedMap) Entries() []MapEntry {
+func (s *OrderedMap) Entries() []MapEntry {
 	values := make([]MapEntry, len(s.keys))
 	for i, k := range s.keys {
 		values[i] = MapEntry{Key: k, Value: s.data[k]}
@@ -104,7 +141,7 @@ func (s *SortedMap) Entries() []MapEntry {
 	return values
 }
 
-func (s SortedMap) String() string {
+func (s OrderedMap) String() string {
 	if s.data == nil {
 		return ""
 	}
@@ -131,30 +168,30 @@ func (s SortedMap) String() string {
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (s SortedMap) MarshalJSON() ([]byte, error) {
+func (s OrderedMap) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	encodeSortedMap(&w, s)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (s SortedMap) MarshalEasyJSON(w *jwriter.Writer) {
+func (s OrderedMap) MarshalEasyJSON(w *jwriter.Writer) {
 	encodeSortedMap(w, s)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (s *SortedMap) UnmarshalJSON(data []byte) error {
+func (s *OrderedMap) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	decodeSortedMap(&r, s)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (s *SortedMap) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (s *OrderedMap) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	decodeSortedMap(l, s)
 }
 
-func encodeSortedMap(out *jwriter.Writer, in SortedMap) {
+func encodeSortedMap(out *jwriter.Writer, in OrderedMap) {
 	if in.data == nil && (out.Flags&jwriter.NilMapAsEmpty) == 0 {
 		out.RawString(`null`)
 		return
@@ -183,7 +220,7 @@ func encodeSortedMap(out *jwriter.Writer, in SortedMap) {
 	out.RawByte('}')
 }
 
-func decodeSortedMap(in *jlexer.Lexer, out *SortedMap) {
+func decodeSortedMap(in *jlexer.Lexer, out *OrderedMap) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -193,16 +230,10 @@ func decodeSortedMap(in *jlexer.Lexer, out *SortedMap) {
 		return
 	}
 	in.Delim('{')
-	if !in.IsDelim('}') {
-		out.data = make(map[string]interface{})
-	} else {
-		out.data = nil
-	}
 	for !in.IsDelim('}') {
 		key := string(in.String())
 		in.WantColon()
-		out.data[key] = in.Interface()
-		out.keys = append(out.keys, key)
+		out.Set(key, in.Interface())
 		in.WantComma()
 	}
 	in.Delim('}')

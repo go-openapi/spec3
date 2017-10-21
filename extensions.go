@@ -2,39 +2,99 @@ package spec3
 
 import (
 	"encoding/json"
-	"strings"
+
+	"github.com/mailru/easyjson/jlexer"
+	"github.com/mailru/easyjson/jwriter"
 )
 
 // Extensions vendor specific extensions
-type Extensions map[string]interface{}
+type Extensions struct {
+	data OrderedMap
+}
+
+func (e Extensions) Set(key string, value interface{}) bool {
+	e.data.filter = MatchExtension
+	e.data.normalize = LowerCaseKeys
+	return e.data.Set(key, value)
+}
 
 // Add adds a value to these extensions
 func (e Extensions) Add(key string, value interface{}) {
-	realKey := strings.ToLower(key)
-	e[realKey] = value
+	e.Set(key, value)
+}
+
+func (e Extensions) GetOK(key string) (interface{}, bool) {
+	e.data.filter = MatchExtension
+	e.data.normalize = LowerCaseKeys
+	return e.data.GetOK(key)
+}
+
+func (e Extensions) Get(key string) interface{} {
+	e.data.filter = MatchExtension
+	e.data.normalize = LowerCaseKeys
+	return e.data.Get(key)
 }
 
 // GetString gets a string value from the extensions
 func (e Extensions) GetString(key string) (string, bool) {
-	if v, ok := e[strings.ToLower(key)]; ok {
+	if v, ok := e.GetOK(key); ok {
 		str, ok := v.(string)
 		return str, ok
 	}
 	return "", false
 }
 
-// GetBool gets a string value from the extensions
+// GetBool gets a boolean value from the extensions
 func (e Extensions) GetBool(key string) (bool, bool) {
-	if v, ok := e[strings.ToLower(key)]; ok {
+	if v, ok := e.GetOK(key); ok {
 		str, ok := v.(bool)
 		return str, ok
 	}
 	return false, false
 }
 
+// GetInt gets an int value from the extensions
+func (e Extensions) GetInt(key string) (int, bool) {
+	if v, ok := e.GetOK(key); ok {
+		switch res := v.(type) {
+		case int:
+			return res, ok
+		case int8:
+			return int(res), ok
+		case int16:
+			return int(res), ok
+		case int32:
+			return int(res), ok
+		case int64:
+			return int(res), ok
+		default:
+			return 0, ok
+		}
+	}
+	return 0, false
+}
+
+// GetInt32 gets an int32 value from the extensions
+func (e Extensions) GetInt32(key string) (int32, bool) {
+	if v, ok := e.GetOK(key); ok {
+		str, ok := v.(int32)
+		return str, ok
+	}
+	return 0, false
+}
+
+// GetInt64 gets an int64 value from the extensions
+func (e Extensions) GetInt64(key string) (int64, bool) {
+	if v, ok := e.GetOK(key); ok {
+		str, ok := v.(int64)
+		return str, ok
+	}
+	return 0, false
+}
+
 // GetStringSlice gets a string value from the extensions
 func (e Extensions) GetStringSlice(key string) ([]string, bool) {
-	if v, ok := e[strings.ToLower(key)]; ok {
+	if v, ok := e.GetOK(key); ok {
 		arr, ok := v.([]interface{})
 		if !ok {
 			return nil, false
@@ -52,6 +112,38 @@ func (e Extensions) GetStringSlice(key string) ([]string, bool) {
 	return nil, false
 }
 
+// MarshalJSON supports json.Marshaler interface
+func (e Extensions) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	e.data.filter = MatchExtension
+	e.data.normalize = LowerCaseKeys
+	encodeSortedMap(&w, e.data)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (e Extensions) MarshalEasyJSON(w *jwriter.Writer) {
+	e.data.filter = MatchExtension
+	e.data.normalize = LowerCaseKeys
+	encodeSortedMap(w, e.data)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (e *Extensions) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	e.data.filter = MatchExtension
+	e.data.normalize = LowerCaseKeys
+	decodeSortedMap(&r, &e.data)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (e *Extensions) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	e.data.filter = MatchExtension
+	e.data.normalize = LowerCaseKeys
+	decodeSortedMap(l, &e.data)
+}
+
 // VendorExtensible composition block.
 type VendorExtensible struct {
 	Extensions Extensions
@@ -62,38 +154,18 @@ func (v *VendorExtensible) AddExtension(key string, value interface{}) {
 	if value == nil {
 		return
 	}
-	if v.Extensions == nil {
-		v.Extensions = make(map[string]interface{})
-	}
 	v.Extensions.Add(key, value)
 }
 
 // MarshalJSON marshals the extensions to json
 func (v VendorExtensible) MarshalJSON() ([]byte, error) {
-	toser := make(map[string]interface{})
-	for k, v := range v.Extensions {
-		lk := strings.ToLower(k)
-		if strings.HasPrefix(lk, "x-") {
-			toser[k] = v
-		}
-	}
-	return json.Marshal(toser)
+	return json.Marshal(v.Extensions)
 }
 
 // UnmarshalJSON for this extensible object
 func (v *VendorExtensible) UnmarshalJSON(data []byte) error {
-	var d map[string]interface{}
-	if err := json.Unmarshal(data, &d); err != nil {
+	if err := json.Unmarshal(data, &v.Extensions); err != nil {
 		return err
-	}
-	for k, vv := range d {
-		lk := strings.ToLower(k)
-		if strings.HasPrefix(lk, "x-") {
-			if v.Extensions == nil {
-				v.Extensions = map[string]interface{}{}
-			}
-			v.Extensions[k] = vv
-		}
 	}
 	return nil
 }
