@@ -95,6 +95,12 @@ func (e Extensions) GetInt64(key string) (int64, bool) {
 // GetStringSlice gets a string value from the extensions
 func (e Extensions) GetStringSlice(key string) ([]string, bool) {
 	if v, ok := e.GetOK(key); ok {
+		strv, ok := v.([]string) // get out quick
+		if ok {
+			return strv, ok
+		}
+
+		// do the thing
 		arr, ok := v.([]interface{})
 		if !ok {
 			return nil, false

@@ -2,4 +2,7 @@
 
 [![license](http://img.shields.io/badge/license-Apache%20v2-orange.svg)](https://raw.githubusercontent.com/go-openapi/spec3/master/LICENSE) [![GoDoc](https://godoc.org/github.com/go-openapi/spec3?status.svg)](http://godoc.org/github.com/go-openapi/spec3)
 
-The object model for OpenAPI specification v3 documents
+The object model for OpenAPI specification v3 documents.
+
+It aims to fix some mistakes that were made in the spec for v2. Top-level maps are now sorted by default so you can rely on their ordering.
+
