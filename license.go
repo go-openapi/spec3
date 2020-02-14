@@ -1,6 +1,7 @@
 package spec3
 
-//easyjson:json
+// License contains information for the exposed API.
+// easyjson:json
 type License struct {
 	VendorExtensible
 

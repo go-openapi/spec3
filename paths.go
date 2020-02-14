@@ -7,6 +7,9 @@ import (
 	jwriter "github.com/mailru/easyjson/jwriter"
 )
 
+// Paths holds the relative paths to the individual endpoints and their operations.
+// The path is appended to the URL from the Server Object in order to construct the full URL.
+// The Paths MAY be empty, due to ACL constraints.
 type Paths struct {
 	data OrderedMap
 }
@@ -24,6 +27,7 @@ func (p *Paths) ForEach(fn func(string, []string) error) error {
 	return nil
 }
 
+// Keys gets list of all the keys
 func (p *Paths) Keys() []string {
 	return p.data.Keys()
 }

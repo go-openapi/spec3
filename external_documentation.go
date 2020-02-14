@@ -1,6 +1,7 @@
 package spec3
 
-//easyjson:json
+// ExternalDocumentation allows referencing an external resource for extended documentation.
+// easyjson:json
 type ExternalDocumentation struct {
 	VendorExtensible
 

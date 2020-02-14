@@ -8,3 +8,37 @@ The object model for OpenAPI specification v3 documents.
 
 It aims to fix some mistakes that were made in the spec for v2. Top-level maps are now sorted by default so you can rely on their ordering.
 
+## Schemas
+
+| Schema                 | `struct{}` | Unit tests |
+| ---------------------- | ---------- | ---------- |
+| OpenAPI                | [x]        | [ ]        |
+| Info                   | [x]        | [ ]        |
+| Contact                | [x]        | [ ]        |
+| License                | [x]        | [ ]        |
+| Server                 | [x]        | [ ]        |
+| Server Variable        | [x]        | [ ]        |
+| Components             | [x]        | [ ]        |
+| Paths                  | [x]        | [ ]        |
+| Path Item              | [x]        | [ ]        |
+| Operation              | [x]        | [ ]        |
+| External Documentation | [x]        | [ ]        |
+| Parameter              | [x]        | [ ]        |
+| Request Body           | [x]        | [ ]        |
+| Media Type             | [x]        | [ ]        |
+| Encoding               | [x]        | [ ]        |
+| Responses              | [x]        | [ ]        |
+| Response               | [x]        | [ ]        |
+| Callback               | [x]        | [ ]        |
+| Example                | [x]        | [ ]        |
+| Link                   | [x]        | [ ]        |
+| Header                 | [x]        | [ ]        |
+| Tag                    | [x]        | [ ]        |
+| Reference              | [x]        | [ ]        |
+| Schema                 | [ ]        | [ ]        |
+| Discriminator          | [x]        | [ ]        |
+| XML                    | [x]        | [ ]        |
+| Security Scheme        | [x]        | [ ]        |
+| OAuth Flows            | [x]        | [ ]        |
+| OAuth Flow             | [x]        | [ ]        |
+| Security Requirement   | [x]        | [ ]        |
