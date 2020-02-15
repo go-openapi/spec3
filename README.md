@@ -10,35 +10,35 @@ It aims to fix some mistakes that were made in the spec for v2. Top-level maps a
 
 ## Schemas
 
-| Schema                 | `struct{}` | Unit tests |
-| ---------------------- | ---------- | ---------- |
-| OpenAPI                | [x]        | [ ]        |
-| Info                   | [x]        | [ ]        |
-| Contact                | [x]        | [ ]        |
-| License                | [x]        | [ ]        |
-| Server                 | [x]        | [ ]        |
-| Server Variable        | [x]        | [ ]        |
-| Components             | [x]        | [ ]        |
-| Paths                  | [x]        | [ ]        |
-| Path Item              | [x]        | [ ]        |
-| Operation              | [x]        | [ ]        |
-| External Documentation | [x]        | [ ]        |
-| Parameter              | [x]        | [ ]        |
-| Request Body           | [x]        | [ ]        |
-| Media Type             | [x]        | [ ]        |
-| Encoding               | [x]        | [ ]        |
-| Responses              | [x]        | [ ]        |
-| Response               | [x]        | [ ]        |
-| Callback               | [x]        | [ ]        |
-| Example                | [x]        | [ ]        |
-| Link                   | [x]        | [ ]        |
-| Header                 | [x]        | [ ]        |
-| Tag                    | [x]        | [ ]        |
-| Reference              | [x]        | [ ]        |
-| Schema                 | [ ]        | [ ]        |
-| Discriminator          | [x]        | [ ]        |
-| XML                    | [x]        | [ ]        |
-| Security Scheme        | [x]        | [ ]        |
-| OAuth Flows            | [x]        | [ ]        |
-| OAuth Flow             | [x]        | [ ]        |
-| Security Requirement   | [x]        | [ ]        |
+| Schema                 | `struct{}`         | Unit tests         |
+| ---------------------- | ------------------ | ------------------ |
+| OpenAPI                | :heavy_check_mark: | :white_check_mark: |
+| Info                   | :heavy_check_mark: | :white_check_mark: |
+| Contact                | :heavy_check_mark: | :white_check_mark: |
+| License                | :heavy_check_mark: | :white_check_mark: |
+| Server                 | :heavy_check_mark: | :white_check_mark: |
+| Server Variable        | :heavy_check_mark: | :white_check_mark: |
+| Components             | :heavy_check_mark: | :white_check_mark: |
+| Paths                  | :heavy_check_mark: | :white_check_mark: |
+| Path Item              | :heavy_check_mark: | :white_check_mark: |
+| Operation              | :heavy_check_mark: | :white_check_mark: |
+| External Documentation | :heavy_check_mark: | :white_check_mark: |
+| Parameter              | :heavy_check_mark: | :white_check_mark: |
+| Request Body           | :heavy_check_mark: | :white_check_mark: |
+| Media Type             | :heavy_check_mark: | :white_check_mark: |
+| Encoding               | :heavy_check_mark: | :white_check_mark: |
+| Responses              | :heavy_check_mark: | :white_check_mark: |
+| Response               | :heavy_check_mark: | :white_check_mark: |
+| Callback               | :heavy_check_mark: | :white_check_mark: |
+| Example                | :heavy_check_mark: | :white_check_mark: |
+| Link                   | :heavy_check_mark: | :white_check_mark: |
+| Header                 | :heavy_check_mark: | :white_check_mark: |
+| Tag                    | :heavy_check_mark: | :white_check_mark: |
+| Reference              | :heavy_check_mark: | :white_check_mark: |
+| Schema                 | :white_check_mark: | :white_check_mark: |
+| Discriminator          | :heavy_check_mark: | :white_check_mark: |
+| XML                    | :heavy_check_mark: | :white_check_mark: |
+| Security Scheme        | :heavy_check_mark: | :white_check_mark: |
+| OAuth Flows            | :heavy_check_mark: | :white_check_mark: |
+| OAuth Flow             | :heavy_check_mark: | :white_check_mark: |
+| Security Requirement   | :heavy_check_mark: | :white_check_mark: |
