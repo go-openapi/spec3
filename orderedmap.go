@@ -56,7 +56,11 @@ func (s *OrderedMap) GetOK(key string) (interface{}, bool) {
 
 // Get get a value for the specified key
 func (s *OrderedMap) Get(key string) interface{} {
-	return s.data[s.normalizeKey(key)]
+	val, ok := s.data[s.normalizeKey(key)]
+	if !ok {
+		return nil
+	}
+	return val
 }
 
 func (s *OrderedMap) normalizeKey(key string) string {
@@ -121,6 +125,17 @@ func (s *OrderedMap) Delete(k string) bool {
 // Keys in the order of addition to the map
 func (s *OrderedMap) Keys() []string {
 	return s.keys[:]
+}
+
+// ForEach executes a function for each value in the map
+func (s *OrderedMap) ForEach(fn func(string, interface{}) error) error {
+	for _, k := range s.Keys() {
+		val := s.Get(k)
+		if err := fn(k, val); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // Values in the order of addition to the map
