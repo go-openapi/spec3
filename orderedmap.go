@@ -23,6 +23,9 @@ type Filter func(string) bool
 // MatchAll keys, is used as default filter
 func MatchAll(_ string) bool { return true }
 
+// MatchNonEmptyKeys keys, is used to allow only non empty strings
+func MatchNonEmptyKeys(key string) bool { return key != "" }
+
 // MatchExtension is used as filter for vendor extensions
 func MatchExtension(key string) bool { return strings.HasPrefix(key, "x-") }
 
