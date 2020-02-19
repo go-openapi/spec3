@@ -23,11 +23,11 @@ func TestParameterMap_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &parameterMap{
+			s := &Parameters{
 				data: tt.fields.data,
 			}
 			if got := s.Get(tt.args.key); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parameterMap.Get() = %v, want %v", got, tt.want)
+				t.Errorf("Parameters.Get() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -52,15 +52,15 @@ func TestParameterMap_GetOK(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &parameterMap{
+			s := &Parameters{
 				data: tt.fields.data,
 			}
 			got, got1 := s.GetOK(tt.args.key)
 			if !reflect.DeepEqual(got, tt.wantParameter) {
-				t.Errorf("parameterMap.GetOK() got = %v, want %v", got, tt.wantParameter)
+				t.Errorf("Parameters.GetOK() got = %v, want %v", got, tt.wantParameter)
 			}
 			if got1 != tt.wantOK {
-				t.Errorf("parameterMap.GetOK() got1 = %v, want %v", got1, tt.wantOK)
+				t.Errorf("Parameters.GetOK() got1 = %v, want %v", got1, tt.wantOK)
 			}
 		})
 	}
@@ -86,20 +86,20 @@ func TestParameterMap_Set(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &parameterMap{
+			s := &Parameters{
 				data: tt.fields.data,
 			}
 			if got := s.Set(tt.args.key, tt.args.val); got != tt.wantOK {
-				t.Fatalf("parameterMap.Set() = %v, want %v", got, tt.wantOK)
+				t.Fatalf("Parameters.Set() = %v, want %v", got, tt.wantOK)
 			}
 
 			if tt.wantOK {
 				gotVal, gotOK := s.GetOK(tt.args.key)
 				if !gotOK {
-					t.Fatalf("parameterMap.GetOK().OK = %v, want %v", gotOK, true)
+					t.Fatalf("Parameters.GetOK().OK = %v, want %v", gotOK, true)
 				}
 				if !reflect.DeepEqual(gotVal, tt.args.val) {
-					t.Fatalf("parameterMap.GetOK().val = %v, want %v", gotVal, tt.args.val)
+					t.Fatalf("Parameters.GetOK().val = %v, want %v", gotVal, tt.args.val)
 				}
 			}
 		})
@@ -124,7 +124,7 @@ func TestParameterMap_ForEach(t *testing.T) {
 		wantErr          error
 	}{
 		{
-			"Should iterate 4 items for parameterMap fixture",
+			"Should iterate 4 items for Parameters fixture",
 			fields{buildOrderMapForParameterMap()},
 			map[string]*foundParameter{
 				"skipParam":  &foundParameter{&Parameter{Description: "default parameter"}, false},
@@ -133,7 +133,7 @@ func TestParameterMap_ForEach(t *testing.T) {
 			nil,
 		},
 		{
-			"Should return empty array when there are no values in parameterMap",
+			"Should return empty array when there are no values in Parameters",
 			fields{},
 			map[string]*foundParameter{},
 			nil,
@@ -141,17 +141,17 @@ func TestParameterMap_ForEach(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &parameterMap{
+			s := &Parameters{
 				data: tt.fields.data,
 			}
 			err := s.ForEach(func(key string, gotParameter *Parameter) error {
 				if wantVal, ok := tt.wantValInForEach[key]; ok {
 					if !reflect.DeepEqual(wantVal.parameter, gotParameter) {
-						t.Fatalf("parameterMap.ForEach() for key = %s val = %v, want = %v", key, gotParameter, wantVal.parameter)
+						t.Fatalf("Parameters.ForEach() for key = %s val = %v, want = %v", key, gotParameter, wantVal.parameter)
 					}
 					wantVal.found = true
 				} else {
-					t.Fatalf("parameterMap.ForEach() for key = %s val = %v, want = %v", key, gotParameter, wantVal)
+					t.Fatalf("Parameters.ForEach() for key = %s val = %v, want = %v", key, gotParameter, wantVal)
 				}
 				return nil
 			})
@@ -159,13 +159,13 @@ func TestParameterMap_ForEach(t *testing.T) {
 			if err == nil && tt.wantErr == nil {
 				// nothing to assert here
 			} else if err != tt.wantErr {
-				t.Fatalf("parameterMap.ForEach() error = %v, wantErr %v", err, tt.wantErr)
+				t.Fatalf("Parameters.ForEach() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
 			if tt.wantErr == nil {
 				for key2, val2 := range tt.wantValInForEach {
 					if !val2.found {
-						t.Fatalf("parameterMap.ForEach() key = %s not found during foreach()", key2)
+						t.Fatalf("Parameters.ForEach() key = %s not found during foreach()", key2)
 					}
 				}
 			}
@@ -182,18 +182,18 @@ func TestParameterMap_Keys(t *testing.T) {
 		fields   fields
 		wantKeys []string
 	}{
-		{"Should return 2 items for parameterMap fixture", fields{buildOrderMapForParameterMap()}, []string{"skipParam", "limitParam"}},
-		{"Should return empty array when there are no values in parameterMap", fields{}, []string{}},
+		{"Should return 2 items for Parameters fixture", fields{buildOrderMapForParameterMap()}, []string{"skipParam", "limitParam"}},
+		{"Should return empty array when there are no values in Parameters", fields{}, []string{}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &parameterMap{
+			s := &Parameters{
 				data: tt.fields.data,
 			}
 			got := s.Keys()
 			if len(got) != 0 || len(tt.wantKeys) != 0 {
 				if !reflect.DeepEqual(got, tt.wantKeys) {
-					t.Errorf("parameterMap.Keys() = %v, want %v", got, tt.wantKeys)
+					t.Errorf("Parameters.Keys() = %v, want %v", got, tt.wantKeys)
 				}
 			}
 		})
@@ -220,8 +220,8 @@ func buildOrderMapForParameterMap() OrderedMap {
 	}
 }
 
-func buildParameterMapFixture() parameterMap {
-	m := parameterMap{
+func buildParameterMapFixture() Parameters {
+	m := Parameters{
 		data: buildOrderMapForParameterMap(),
 	}
 

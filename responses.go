@@ -7,7 +7,7 @@ import (
 
 // Responses is a container for the expected responses of an operation. The container maps a HTTP response code to the expected response.
 type Responses struct {
-	data responseMap
+	data OrderedMap
 }
 
 // Response describes a single response from an API Operation, including design-time, static links to operations based on the response.
@@ -21,13 +21,9 @@ type Response struct {
 	Links       map[string]Link      `json:"links"`
 }
 
-// responseMap contains map of string with Response
-type responseMap struct {
-	data OrderedMap
-}
-
-func NewResponseMap() responseMap {
-	return responseMap{
+// NewResponses creates the new instance of the Responses with correct key-filter
+func NewResponses() Responses {
+	return Responses{
 		data: OrderedMap{
 			filter: matchResponseCode,
 		},
@@ -35,7 +31,7 @@ func NewResponseMap() responseMap {
 }
 
 // Get gets the security requirement by key
-func (s *responseMap) Get(key string) *Response {
+func (s *Responses) Get(key string) *Response {
 	v := s.data.Get(key)
 	if v == nil {
 		return nil
@@ -44,7 +40,7 @@ func (s *responseMap) Get(key string) *Response {
 }
 
 // GetOK checks if the key exists in the security requirement
-func (s *responseMap) GetOK(key string) (*Response, bool) {
+func (s *Responses) GetOK(key string) (*Response, bool) {
 	v, ok := s.data.GetOK(key)
 	if !ok {
 		return nil, ok
@@ -55,12 +51,12 @@ func (s *responseMap) GetOK(key string) (*Response, bool) {
 }
 
 // Set sets the value to the security requirement
-func (s *responseMap) Set(key string, val *Response) bool {
+func (s *Responses) Set(key string, val *Response) bool {
 	return s.data.Set(key, val)
 }
 
 // ForEach executes the function for each security requirement
-func (s *responseMap) ForEach(fn func(string, *Response) error) error {
+func (s *Responses) ForEach(fn func(string, *Response) error) error {
 	s.data.ForEach(func(key string, val interface{}) error {
 		response, _ := val.(*Response)
 		if err := fn(key, response); err != nil {
@@ -72,31 +68,31 @@ func (s *responseMap) ForEach(fn func(string, *Response) error) error {
 }
 
 // Keys gets the list of keys
-func (s *responseMap) Keys() []string {
+func (s *Responses) Keys() []string {
 	return s.data.Keys()
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (s responseMap) MarshalJSON() ([]byte, error) {
+func (s Responses) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	encodeSortedMap(&w, s.data)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (s responseMap) MarshalEasyJSON(w *jwriter.Writer) {
+func (s Responses) MarshalEasyJSON(w *jwriter.Writer) {
 	encodeSortedMap(w, s.data)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (s *responseMap) UnmarshalJSON(data []byte) error {
+func (s *Responses) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	decodeSortedMap(&r, &s.data)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (s *responseMap) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (s *Responses) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	decodeSortedMap(l, &s.data)
 }
 

@@ -10,38 +10,38 @@ It aims to fix some mistakes that were made in the spec for v2. Top-level maps a
 
 ## Schemas
 
-| Schema                 | `struct{}`              | Unit tests            |
-| ---------------------- | ----------------------- | --------------------- |
-| OpenAPI                | :ballot_box_with_check: | :black_square_button: |
-| Info                   | :ballot_box_with_check: | :black_square_button: |
-| Contact                | :ballot_box_with_check: | :black_square_button: |
-| License                | :ballot_box_with_check: | :black_square_button: |
-| Server                 | :ballot_box_with_check: | :black_square_button: |
-| Server Variable        | :ballot_box_with_check: | :black_square_button: |
-| Components             | :ballot_box_with_check: | :black_square_button: |
-| Paths                  | :ballot_box_with_check: | :black_square_button: |
-| Path Item              | :ballot_box_with_check: | :black_square_button: |
-| Operation              | :ballot_box_with_check: | :black_square_button: |
-| External Documentation | :ballot_box_with_check: | :black_square_button: |
-| Parameter              | :ballot_box_with_check: | :black_square_button: |
-| Request Body           | :ballot_box_with_check: | :black_square_button: |
-| Media Type             | :ballot_box_with_check: | :black_square_button: |
-| Encoding               | :ballot_box_with_check: | :black_square_button: |
-| Responses              | :ballot_box_with_check: | :black_square_button: |
-| Response               | :ballot_box_with_check: | :black_square_button: |
-| Callback               | :ballot_box_with_check: | :black_square_button: |
-| Example                | :ballot_box_with_check: | :black_square_button: |
-| Link                   | :ballot_box_with_check: | :black_square_button: |
-| Header                 | :ballot_box_with_check: | :black_square_button: |
-| Tag                    | :ballot_box_with_check: | :black_square_button: |
-| Reference              | :ballot_box_with_check: | :black_square_button: |
-| Schema                 | :black_square_button:   | :black_square_button: |
-| Discriminator          | :ballot_box_with_check: | :black_square_button: |
-| XML                    | :ballot_box_with_check: | :black_square_button: |
-| Security Scheme        | :ballot_box_with_check: | :black_square_button: |
-| OAuth Flows            | :ballot_box_with_check: | :black_square_button: |
-| OAuth Flow             | :ballot_box_with_check: | :black_square_button: |
-| Security Requirement   | :ballot_box_with_check: | :black_square_button: |
+| Schema                 | `struct{}` + `map`                              | Unit tests (`struct{}` + `map`)               |
+| ---------------------- | ----------------------------------------------- | --------------------------------------------- |
+| OpenAPI                | :ballot_box_with_check:                         | :black_square_button:                         |
+| Info                   | :ballot_box_with_check:                         | :black_square_button:                         |
+| Contact                | :ballot_box_with_check:                         | :black_square_button:                         |
+| License                | :ballot_box_with_check:                         | :black_square_button:                         |
+| Server                 | :ballot_box_with_check:                         | :black_square_button:                         |
+| Server Variable        | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| Components             | :ballot_box_with_check:                         | :black_square_button:                         |
+| Paths                  | :ballot_box_with_check:                         | :black_square_button:                         |
+| Path Item              | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| Operation              | :ballot_box_with_check:                         | :black_square_button:                         |
+| External Documentation | :ballot_box_with_check:                         | :black_square_button:                         |
+| Parameter              | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| Request Body           | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| Media Type             | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| Encoding               | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| Responses              | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| Response               | :ballot_box_with_check:                         | :black_square_button:                         |
+| Callback               | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| Example                | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| Link                   | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| Header                 | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| Tag                    | :ballot_box_with_check:                         | :black_square_button:                         |
+| Reference              | :ballot_box_with_check:                         | :black_square_button:                         |
+| Schema                 | :black_square_button: + :black_square_button:   | :black_square_button: + :black_square_button: |
+| Discriminator          | :ballot_box_with_check:                         | :black_square_button:                         |
+| XML                    | :ballot_box_with_check:                         | :black_square_button:                         |
+| Security Scheme        | :ballot_box_with_check: + :black_square_button: | :black_square_button: + :black_square_button: |
+| OAuth Flows            | :ballot_box_with_check:                         | :black_square_button:                         |
+| OAuth Flow             | :ballot_box_with_check:                         | :black_square_button:                         |
+| Security Requirement   | :ballot_box_with_check:                         | :black_square_button:                         |
 
 ## TODO
 
