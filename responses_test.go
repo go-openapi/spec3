@@ -8,7 +8,7 @@ import (
 	jwriter "github.com/mailru/easyjson/jwriter"
 )
 
-func TestResponseMap_Get(t *testing.T) {
+func TestResponses_Get(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -21,8 +21,8 @@ func TestResponseMap_Get(t *testing.T) {
 		args   args
 		want   *Response
 	}{
-		{"Should fetch the item when existent key is passed", fields{buildOrderMapForResponseMap()}, args{"default"}, &Response{Description: "default response"}},
-		{"Should return nil when non-existent key is passed", fields{buildOrderMapForResponseMap()}, args{"201"}, nil},
+		{"Should fetch the item when existent key is passed", fields{buildOrderMapForResponses()}, args{"default"}, &Response{Description: "default response"}},
+		{"Should return nil when non-existent key is passed", fields{buildOrderMapForResponses()}, args{"201"}, nil},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -36,7 +36,7 @@ func TestResponseMap_Get(t *testing.T) {
 	}
 }
 
-func TestResponseMap_GetOK(t *testing.T) {
+func TestResponses_GetOK(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -50,8 +50,8 @@ func TestResponseMap_GetOK(t *testing.T) {
 		wantResponse *Response
 		wantOK       bool
 	}{
-		{"Should fetch the item when existent key is passed", fields{buildOrderMapForResponseMap()}, args{"200"}, &Response{Description: "OK"}, true},
-		{"Should return nil when non-existent key is passed", fields{buildOrderMapForResponseMap()}, args{"401"}, nil, false},
+		{"Should fetch the item when existent key is passed", fields{buildOrderMapForResponses()}, args{"200"}, &Response{Description: "OK"}, true},
+		{"Should return nil when non-existent key is passed", fields{buildOrderMapForResponses()}, args{"401"}, nil, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -69,7 +69,7 @@ func TestResponseMap_GetOK(t *testing.T) {
 	}
 }
 
-func TestResponseMap_Set(t *testing.T) {
+func TestResponses_Set(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -83,9 +83,9 @@ func TestResponseMap_Set(t *testing.T) {
 		args   args
 		wantOK bool
 	}{
-		{"Should set value when non-existent response code is passed", fields{buildOrderMapForResponseMap()}, args{"201", &Response{Description: "Created"}}, true},
-		{"Should fail when existent response code is passed", fields{buildOrderMapForResponseMap()}, args{"200", &Response{Description: "another OK"}}, false},
-		{"Should fail when empty key is passed", fields{buildOrderMapForResponseMap()}, args{"", &Response{Description: "description of item #empty"}}, false},
+		{"Should set value when non-existent response code is passed", fields{buildOrderMapForResponses()}, args{"201", &Response{Description: "Created"}}, true},
+		{"Should fail when existent response code is passed", fields{buildOrderMapForResponses()}, args{"200", &Response{Description: "another OK"}}, false},
+		{"Should fail when empty key is passed", fields{buildOrderMapForResponses()}, args{"", &Response{Description: "description of item #empty"}}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -109,7 +109,7 @@ func TestResponseMap_Set(t *testing.T) {
 	}
 }
 
-func TestResponseMap_ForEach(t *testing.T) {
+func TestResponses_ForEach(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -128,7 +128,7 @@ func TestResponseMap_ForEach(t *testing.T) {
 	}{
 		{
 			"Should iterate 4 items for Responses fixture",
-			fields{buildOrderMapForResponseMap()},
+			fields{buildOrderMapForResponses()},
 			map[string]*foundResponse{
 				"default": &foundResponse{&Response{Description: "default response"}, false},
 				"200":     &foundResponse{&Response{Description: "OK"}, false},
@@ -178,7 +178,7 @@ func TestResponseMap_ForEach(t *testing.T) {
 	}
 }
 
-func TestResponseMap_Keys(t *testing.T) {
+func TestResponses_Keys(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -187,7 +187,7 @@ func TestResponseMap_Keys(t *testing.T) {
 		fields   fields
 		wantKeys []string
 	}{
-		{"Should return 4 items for Responses fixture", fields{buildOrderMapForResponseMap()}, []string{"default", "200", "404", "500"}},
+		{"Should return 4 items for Responses fixture", fields{buildOrderMapForResponses()}, []string{"default", "200", "404", "500"}},
 		{"Should return empty array when there are no values in Responses", fields{}, []string{}},
 	}
 	for _, tt := range tests {
@@ -205,7 +205,7 @@ func TestResponseMap_Keys(t *testing.T) {
 	}
 }
 
-func TestResponseMap_MarshalJSON(t *testing.T) {
+func TestResponses_MarshalJSON(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -236,7 +236,7 @@ func TestResponseMap_MarshalJSON(t *testing.T) {
 	}
 }
 
-func TestResponseMap_MarshalEasyJSON(t *testing.T) {
+func TestResponses_MarshalEasyJSON(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -260,7 +260,7 @@ func TestResponseMap_MarshalEasyJSON(t *testing.T) {
 	}
 }
 
-func TestResponseMap_UnmarshalJSON(t *testing.T) {
+func TestResponses_UnmarshalJSON(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -290,7 +290,7 @@ func TestResponseMap_UnmarshalJSON(t *testing.T) {
 	}
 }
 
-func TestResponseMap_UnmarshalEasyJSON(t *testing.T) {
+func TestResponses_UnmarshalEasyJSON(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -314,13 +314,13 @@ func TestResponseMap_UnmarshalEasyJSON(t *testing.T) {
 	}
 }
 
-func buildEmptyOrderMapForResponseMap() OrderedMap {
+func buildEmptyOrderMapForResponses() OrderedMap {
 	return OrderedMap{
 		filter: matchResponseCode,
 	}
 }
 
-func buildOrderMapForResponseMap() OrderedMap {
+func buildOrderMapForResponses() OrderedMap {
 	return OrderedMap{
 		data: map[string]interface{}{
 			"default": &Response{Description: "default response"},
@@ -338,9 +338,9 @@ func buildOrderMapForResponseMap() OrderedMap {
 	}
 }
 
-func buildResponseMapFixture() Responses {
+func buildResponsesFixture() Responses {
 	m := Responses{
-		data: buildOrderMapForResponseMap(),
+		data: buildOrderMapForResponses(),
 	}
 
 	return m

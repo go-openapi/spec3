@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestParameterMap_Get(t *testing.T) {
+func TestParameters_Get(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -18,8 +18,8 @@ func TestParameterMap_Get(t *testing.T) {
 		args   args
 		want   *Parameter
 	}{
-		{"Should fetch the item when existent key is passed", fields{buildOrderMapForParameterMap()}, args{"skipParam"}, &Parameter{Description: "default parameter"}},
-		{"Should return nil when non-existent key is passed", fields{buildOrderMapForParameterMap()}, args{"getParam"}, nil},
+		{"Should fetch the item when existent key is passed", fields{buildOrderMapForParameters()}, args{"skipParam"}, &Parameter{Description: "default parameter"}},
+		{"Should return nil when non-existent key is passed", fields{buildOrderMapForParameters()}, args{"getParam"}, nil},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -33,7 +33,7 @@ func TestParameterMap_Get(t *testing.T) {
 	}
 }
 
-func TestParameterMap_GetOK(t *testing.T) {
+func TestParameters_GetOK(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -47,8 +47,8 @@ func TestParameterMap_GetOK(t *testing.T) {
 		wantParameter *Parameter
 		wantOK        bool
 	}{
-		{"Should fetch the item when existent key is passed", fields{buildOrderMapForParameterMap()}, args{"limitParam"}, &Parameter{Description: "OK"}, true},
-		{"Should return nil when non-existent key is passed", fields{buildOrderMapForParameterMap()}, args{"getParam"}, nil, false},
+		{"Should fetch the item when existent key is passed", fields{buildOrderMapForParameters()}, args{"limitParam"}, &Parameter{Description: "OK"}, true},
+		{"Should return nil when non-existent key is passed", fields{buildOrderMapForParameters()}, args{"getParam"}, nil, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -66,7 +66,7 @@ func TestParameterMap_GetOK(t *testing.T) {
 	}
 }
 
-func TestParameterMap_Set(t *testing.T) {
+func TestParameters_Set(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -80,9 +80,9 @@ func TestParameterMap_Set(t *testing.T) {
 		args   args
 		wantOK bool
 	}{
-		{"Should set value when non-existent parameter code is passed", fields{buildOrderMapForParameterMap()}, args{"getParam", &Parameter{Description: "Getting Parameters"}}, true},
-		{"Should fail when existent parameter code is passed", fields{buildOrderMapForParameterMap()}, args{"limitParam", &Parameter{Description: "another OK"}}, false},
-		{"Should fail when empty key is passed", fields{buildOrderMapForParameterMap()}, args{"", &Parameter{Description: "description of item #empty"}}, false},
+		{"Should set value when non-existent parameter code is passed", fields{buildOrderMapForParameters()}, args{"getParam", &Parameter{Description: "Getting Parameters"}}, true},
+		{"Should fail when existent parameter code is passed", fields{buildOrderMapForParameters()}, args{"limitParam", &Parameter{Description: "another OK"}}, false},
+		{"Should fail when empty key is passed", fields{buildOrderMapForParameters()}, args{"", &Parameter{Description: "description of item #empty"}}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -106,7 +106,7 @@ func TestParameterMap_Set(t *testing.T) {
 	}
 }
 
-func TestParameterMap_ForEach(t *testing.T) {
+func TestParameters_ForEach(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -125,7 +125,7 @@ func TestParameterMap_ForEach(t *testing.T) {
 	}{
 		{
 			"Should iterate 4 items for Parameters fixture",
-			fields{buildOrderMapForParameterMap()},
+			fields{buildOrderMapForParameters()},
 			map[string]*foundParameter{
 				"skipParam":  &foundParameter{&Parameter{Description: "default parameter"}, false},
 				"limitParam": &foundParameter{&Parameter{Description: "OK"}, false},
@@ -173,7 +173,7 @@ func TestParameterMap_ForEach(t *testing.T) {
 	}
 }
 
-func TestParameterMap_Keys(t *testing.T) {
+func TestParameters_Keys(t *testing.T) {
 	type fields struct {
 		data OrderedMap
 	}
@@ -182,7 +182,7 @@ func TestParameterMap_Keys(t *testing.T) {
 		fields   fields
 		wantKeys []string
 	}{
-		{"Should return 2 items for Parameters fixture", fields{buildOrderMapForParameterMap()}, []string{"skipParam", "limitParam"}},
+		{"Should return 2 items for Parameters fixture", fields{buildOrderMapForParameters()}, []string{"skipParam", "limitParam"}},
 		{"Should return empty array when there are no values in Parameters", fields{}, []string{}},
 	}
 	for _, tt := range tests {
@@ -200,13 +200,13 @@ func TestParameterMap_Keys(t *testing.T) {
 	}
 }
 
-func buildEmptyOrderMapForParameterMap() OrderedMap {
+func buildEmptyOrderMapForParameters() OrderedMap {
 	return OrderedMap{
 		filter: MatchNonEmptyKeys,
 	}
 }
 
-func buildOrderMapForParameterMap() OrderedMap {
+func buildOrderMapForParameters() OrderedMap {
 	return OrderedMap{
 		data: map[string]interface{}{
 			"skipParam":  &Parameter{Description: "default parameter"},
@@ -220,9 +220,9 @@ func buildOrderMapForParameterMap() OrderedMap {
 	}
 }
 
-func buildParameterMapFixture() Parameters {
+func buildParametersFixture() Parameters {
 	m := Parameters{
-		data: buildOrderMapForParameterMap(),
+		data: buildOrderMapForParameters(),
 	}
 
 	return m
