@@ -1,3 +1,4 @@
 secrets.yml
 coverage.out
 .idea
+.vscode

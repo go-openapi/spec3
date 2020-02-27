@@ -1,6 +1,7 @@
 package spec3
 
-//easyjson:json
+// Server object representing a Server.
+// easyjson:json
 type Server struct {
 	VendorExtensible
 
@@ -9,6 +10,7 @@ type Server struct {
 	Variables   map[string]ServerVariable
 }
 
+// ServerVariable object representing a Server Variable for server URL template substitution.
 type ServerVariable struct {
 	VendorExtensible
 
