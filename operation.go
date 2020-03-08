@@ -11,7 +11,7 @@ type Operation struct {
 	OperationID  string                `json:"operationId,omitempty"`
 	Parameters   []Parameter           `json:"parameters,omitempty"`
 	RequestBody  RequestBody           `json:"requestBody,omitempty"`
-	Responses    Responses             `json:"responses,omitempty"`
+	Responses    OrderedResponses      `json:"responses,omitempty"`
 	Callbacks    map[string]Callback   `json:"callbacks,omitempty"`
 	Deprecated   bool                  `json:"deprecated,omitempty"`
 	Security     []SecurityRequirement `json:"security,omitempty"`

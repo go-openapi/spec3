@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson22b57fa5DecodeGithubComGoOpenapiSpec3(in *jlexer.Lexer, out *ServerVariable) {
+func easyjson22b57fa5DecodeGithubComGoOpenapiSpec3(in *jlexer.Lexer, out *ServerVariables) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -36,7 +36,66 @@ func easyjson22b57fa5DecodeGithubComGoOpenapiSpec3(in *jlexer.Lexer, out *Server
 			continue
 		}
 		switch key {
-		case "enum":
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson22b57fa5EncodeGithubComGoOpenapiSpec3(out *jwriter.Writer, in ServerVariables) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v ServerVariables) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson22b57fa5EncodeGithubComGoOpenapiSpec3(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v ServerVariables) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson22b57fa5EncodeGithubComGoOpenapiSpec3(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *ServerVariables) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson22b57fa5DecodeGithubComGoOpenapiSpec3(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *ServerVariables) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson22b57fa5DecodeGithubComGoOpenapiSpec3(l, v)
+}
+func easyjson22b57fa5DecodeGithubComGoOpenapiSpec31(in *jlexer.Lexer, out *ServerVariable) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeString()
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "Enum":
 			if in.IsNull() {
 				in.Skip()
 				out.Enum = nil
@@ -59,11 +118,11 @@ func easyjson22b57fa5DecodeGithubComGoOpenapiSpec3(in *jlexer.Lexer, out *Server
 				}
 				in.Delim(']')
 			}
-		case "default":
+		case "Default":
 			out.Default = string(in.String())
-		case "description":
+		case "Description":
 			out.Description = string(in.String())
-		case "extensions":
+		case "Extensions":
 			(out.Extensions).UnmarshalEasyJSON(in)
 		default:
 			in.SkipRecursive()
@@ -75,19 +134,16 @@ func easyjson22b57fa5DecodeGithubComGoOpenapiSpec3(in *jlexer.Lexer, out *Server
 		in.Consumed()
 	}
 }
-func easyjson22b57fa5EncodeGithubComGoOpenapiSpec3(out *jwriter.Writer, in ServerVariable) {
+func easyjson22b57fa5EncodeGithubComGoOpenapiSpec31(out *jwriter.Writer, in ServerVariable) {
 	out.RawByte('{')
 	first := true
 	_ = first
-	if len(in.Enum) != 0 {
-		const prefix string = ",\"enum\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
+	{
+		const prefix string = ",\"Enum\":"
+		out.RawString(prefix[1:])
+		if in.Enum == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+			out.RawString("null")
 		} else {
-			out.RawString(prefix)
-		}
-		{
 			out.RawByte('[')
 			for v2, v3 := range in.Enum {
 				if v2 > 0 {
@@ -98,34 +154,19 @@ func easyjson22b57fa5EncodeGithubComGoOpenapiSpec3(out *jwriter.Writer, in Serve
 			out.RawByte(']')
 		}
 	}
-	if in.Default != "" {
-		const prefix string = ",\"default\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+	{
+		const prefix string = ",\"Default\":"
+		out.RawString(prefix)
 		out.String(string(in.Default))
 	}
-	if in.Description != "" {
-		const prefix string = ",\"description\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+	{
+		const prefix string = ",\"Description\":"
+		out.RawString(prefix)
 		out.String(string(in.Description))
 	}
-	if true {
-		const prefix string = ",\"extensions\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+	{
+		const prefix string = ",\"Extensions\":"
+		out.RawString(prefix)
 		(in.Extensions).MarshalEasyJSON(out)
 	}
 	out.RawByte('}')
@@ -134,27 +175,27 @@ func easyjson22b57fa5EncodeGithubComGoOpenapiSpec3(out *jwriter.Writer, in Serve
 // MarshalJSON supports json.Marshaler interface
 func (v ServerVariable) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson22b57fa5EncodeGithubComGoOpenapiSpec3(&w, v)
+	easyjson22b57fa5EncodeGithubComGoOpenapiSpec31(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v ServerVariable) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson22b57fa5EncodeGithubComGoOpenapiSpec3(w, v)
+	easyjson22b57fa5EncodeGithubComGoOpenapiSpec31(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *ServerVariable) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson22b57fa5DecodeGithubComGoOpenapiSpec3(&r, v)
+	easyjson22b57fa5DecodeGithubComGoOpenapiSpec31(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *ServerVariable) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson22b57fa5DecodeGithubComGoOpenapiSpec3(l, v)
+	easyjson22b57fa5DecodeGithubComGoOpenapiSpec31(l, v)
 }
-func easyjson22b57fa5DecodeGithubComGoOpenapiSpec31(in *jlexer.Lexer, out *Server) {
+func easyjson22b57fa5DecodeGithubComGoOpenapiSpec32(in *jlexer.Lexer, out *Server) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -173,31 +214,13 @@ func easyjson22b57fa5DecodeGithubComGoOpenapiSpec31(in *jlexer.Lexer, out *Serve
 			continue
 		}
 		switch key {
-		case "url":
+		case "URL":
 			out.URL = string(in.String())
-		case "description":
+		case "Description":
 			out.Description = string(in.String())
-		case "variables":
-			if in.IsNull() {
-				in.Skip()
-			} else {
-				in.Delim('{')
-				if !in.IsDelim('}') {
-					out.Variables = make(map[string]ServerVariable)
-				} else {
-					out.Variables = nil
-				}
-				for !in.IsDelim('}') {
-					key := string(in.String())
-					in.WantColon()
-					var v4 ServerVariable
-					(v4).UnmarshalEasyJSON(in)
-					(out.Variables)[key] = v4
-					in.WantComma()
-				}
-				in.Delim('}')
-			}
-		case "extensions":
+		case "Variables":
+			(out.Variables).UnmarshalEasyJSON(in)
+		case "Extensions":
 			(out.Extensions).UnmarshalEasyJSON(in)
 		default:
 			in.SkipRecursive()
@@ -209,62 +232,28 @@ func easyjson22b57fa5DecodeGithubComGoOpenapiSpec31(in *jlexer.Lexer, out *Serve
 		in.Consumed()
 	}
 }
-func easyjson22b57fa5EncodeGithubComGoOpenapiSpec31(out *jwriter.Writer, in Server) {
+func easyjson22b57fa5EncodeGithubComGoOpenapiSpec32(out *jwriter.Writer, in Server) {
 	out.RawByte('{')
 	first := true
 	_ = first
-	if in.URL != "" {
-		const prefix string = ",\"url\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+	{
+		const prefix string = ",\"URL\":"
+		out.RawString(prefix[1:])
 		out.String(string(in.URL))
 	}
-	if in.Description != "" {
-		const prefix string = ",\"description\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+	{
+		const prefix string = ",\"Description\":"
+		out.RawString(prefix)
 		out.String(string(in.Description))
 	}
-	if len(in.Variables) != 0 {
-		const prefix string = ",\"variables\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
-		{
-			out.RawByte('{')
-			v5First := true
-			for v5Name, v5Value := range in.Variables {
-				if v5First {
-					v5First = false
-				} else {
-					out.RawByte(',')
-				}
-				out.String(string(v5Name))
-				out.RawByte(':')
-				(v5Value).MarshalEasyJSON(out)
-			}
-			out.RawByte('}')
-		}
+	{
+		const prefix string = ",\"Variables\":"
+		out.RawString(prefix)
+		(in.Variables).MarshalEasyJSON(out)
 	}
-	if true {
-		const prefix string = ",\"extensions\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+	{
+		const prefix string = ",\"Extensions\":"
+		out.RawString(prefix)
 		(in.Extensions).MarshalEasyJSON(out)
 	}
 	out.RawByte('}')
@@ -273,23 +262,23 @@ func easyjson22b57fa5EncodeGithubComGoOpenapiSpec31(out *jwriter.Writer, in Serv
 // MarshalJSON supports json.Marshaler interface
 func (v Server) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson22b57fa5EncodeGithubComGoOpenapiSpec31(&w, v)
+	easyjson22b57fa5EncodeGithubComGoOpenapiSpec32(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Server) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson22b57fa5EncodeGithubComGoOpenapiSpec31(w, v)
+	easyjson22b57fa5EncodeGithubComGoOpenapiSpec32(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Server) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson22b57fa5DecodeGithubComGoOpenapiSpec31(&r, v)
+	easyjson22b57fa5DecodeGithubComGoOpenapiSpec32(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Server) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson22b57fa5DecodeGithubComGoOpenapiSpec31(l, v)
+	easyjson22b57fa5DecodeGithubComGoOpenapiSpec32(l, v)
 }

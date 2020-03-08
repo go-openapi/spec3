@@ -59,3 +59,61 @@ func (s *Callback) Keys() []string {
 }
 
 // TODO: (s *Callback) Implement Marshal & Unmarshal -> JSON, YAML
+
+// OrderedCallbacks is a map between a variable name and its value. The value is used for substitution in the server's URL template.
+type OrderedCallbacks struct {
+	data OrderedMap
+}
+
+// NewOrderedCallbacks creates a new instance of OrderedCallbacks with correct filter
+func NewOrderedCallbacks() OrderedCallbacks {
+	return OrderedCallbacks{
+		data: OrderedMap{
+			filter: MatchNonEmptyKeys, // TODO: check if keys are some regex or just any non empty string
+		},
+	}
+}
+
+// Get gets the security requirement by key
+func (s *OrderedCallbacks) Get(key string) *Callback {
+	v := s.data.Get(key)
+	if v == nil {
+		return nil
+	}
+	return v.(*Callback)
+}
+
+// GetOK checks if the key exists in the security requirement
+func (s *OrderedCallbacks) GetOK(key string) (*Callback, bool) {
+	v, ok := s.data.GetOK(key)
+	if !ok {
+		return nil, ok
+	}
+
+	sr, ok := v.(*Callback)
+	return sr, ok
+}
+
+// Set sets the value to the security requirement
+func (s *OrderedCallbacks) Set(key string, val *Callback) bool {
+	return s.data.Set(key, val)
+}
+
+// ForEach executes the function for each security requirement
+func (s *OrderedCallbacks) ForEach(fn func(string, *Callback) error) error {
+	s.data.ForEach(func(key string, val interface{}) error {
+		response, _ := val.(*Callback)
+		if err := fn(key, response); err != nil {
+			return err
+		}
+		return nil
+	})
+	return nil
+}
+
+// Keys gets the list of keys
+func (s *OrderedCallbacks) Keys() []string {
+	return s.data.Keys()
+}
+
+// TODO: (s *OrderedCallbacks) Implement Marshal & Unmarshal -> JSON, YAML
