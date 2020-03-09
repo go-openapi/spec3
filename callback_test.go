@@ -202,7 +202,8 @@ func TestCallback_Keys(t *testing.T) {
 
 func buildEmptyOrderMapForCallback() OrderedMap {
 	return OrderedMap{
-		filter: MatchNonEmptyKeys,
+		filter:    MatchNonEmptyKeys,
+		normalize: NOPNormalizer,
 	}
 }
 
@@ -216,7 +217,8 @@ func buildOrderMapForCallback() OrderedMap {
 			"skipParam",
 			"limitParam",
 		},
-		filter: MatchNonEmptyKeys,
+		filter:    MatchNonEmptyKeys,
+		normalize: NOPNormalizer,
 	}
 }
 
@@ -229,8 +231,6 @@ func buildCallbackFixture() Callback {
 }
 
 // Test cases for the OrderedCallbacks
-
-/*
 
 // FIXME: fix the test cases
 
@@ -247,7 +247,7 @@ func TestOrderedCallbacks_Get(t *testing.T) {
 		args   args
 		want   *Callback
 	}{
-		{"Should fetch the item when existent key is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"skipParam"}, &Callback{Description: "default parameter"}},
+		{"Should fetch the item when existent key is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"skipParam"}, buildCallback("default parameter")},
 		{"Should return nil when non-existent key is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"getParam"}, nil},
 	}
 	for _, tt := range tests {
@@ -255,7 +255,19 @@ func TestOrderedCallbacks_Get(t *testing.T) {
 			s := &OrderedCallbacks{
 				data: tt.fields.data,
 			}
-			if got := s.Get(tt.args.key); !reflect.DeepEqual(got, tt.want) {
+			got := s.Get(tt.args.key)
+
+			if got != nil {
+				got.data.filter = nil
+				got.data.normalize = nil
+			}
+
+			if tt.want != nil {
+				tt.want.data.filter = nil
+				tt.want.data.normalize = nil
+			}
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("OrderedCallbacks.Get() = %v, want %v", got, tt.want)
 			}
 		})
@@ -276,7 +288,7 @@ func TestOrderedCallbacks_GetOK(t *testing.T) {
 		wantCallback *Callback
 		wantOK       bool
 	}{
-		{"Should fetch the item when existent key is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"limitParam"}, &Callback{Description: "OK"}, true},
+		{"Should fetch the item when existent key is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"limitParam"}, buildCallback("OK"), true},
 		{"Should return nil when non-existent key is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"getParam"}, nil, false},
 	}
 	for _, tt := range tests {
@@ -285,6 +297,17 @@ func TestOrderedCallbacks_GetOK(t *testing.T) {
 				data: tt.fields.data,
 			}
 			got, got1 := s.GetOK(tt.args.key)
+
+			if got != nil {
+				got.data.filter = nil
+				got.data.normalize = nil
+			}
+
+			if tt.wantCallback != nil {
+				tt.wantCallback.data.filter = nil
+				tt.wantCallback.data.normalize = nil
+			}
+
 			if !reflect.DeepEqual(got, tt.wantCallback) {
 				t.Errorf("OrderedCallbacks.GetOK() got = %v, want %v", got, tt.wantCallback)
 			}
@@ -309,9 +332,9 @@ func TestOrderedCallbacks_Set(t *testing.T) {
 		args   args
 		wantOK bool
 	}{
-		{"Should set value when non-existent parameter code is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"getParam", &Callback{Description: "Getting OrderedCallbacks"}}, true},
-		{"Should fail when existent parameter code is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"limitParam", &Callback{Description: "another OK"}}, false},
-		{"Should fail when empty key is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"", &Callback{Description: "description of item #empty"}}, false},
+		{"Should set value when non-existent parameter code is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"getParam", buildCallback("Getting OrderedCallbacks")}, true},
+		{"Should fail when existent parameter code is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"limitParam", buildCallback("another OK")}, false},
+		{"Should fail when empty key is passed", fields{buildOrderMapForOrderedCallbacks()}, args{"", buildCallback("description of item #empty")}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -356,8 +379,8 @@ func TestOrderedCallbacks_ForEach(t *testing.T) {
 			"Should iterate 4 items for OrderedCallbacks fixture",
 			fields{buildOrderMapForOrderedCallbacks()},
 			map[string]*foundCallback{
-				"skipParam":  &foundCallback{&Callback{Description: "default parameter"}, false},
-				"limitParam": &foundCallback{&Callback{Description: "OK"}, false},
+				"skipParam":  &foundCallback{buildCallback("default parameter"), false},
+				"limitParam": &foundCallback{buildCallback("OK"), false},
 			},
 			nil,
 		},
@@ -375,6 +398,17 @@ func TestOrderedCallbacks_ForEach(t *testing.T) {
 			}
 			err := s.ForEach(func(key string, gotCallback *Callback) error {
 				if wantVal, ok := tt.wantValInForEach[key]; ok {
+
+					if gotCallback != nil {
+						gotCallback.data.filter = nil
+						gotCallback.data.normalize = nil
+					}
+
+					if wantVal.parameter != nil {
+						wantVal.parameter.data.filter = nil
+						wantVal.parameter.data.normalize = nil
+					}
+
 					if !reflect.DeepEqual(wantVal.parameter, gotCallback) {
 						t.Fatalf("OrderedCallbacks.ForEach() for key = %s val = %v, want = %v", key, gotCallback, wantVal.parameter)
 					}
@@ -429,23 +463,34 @@ func TestOrderedCallbacks_Keys(t *testing.T) {
 	}
 }
 
+func buildCallback(description string) *Callback {
+	callback := Callback{}
+
+	pathitem := PathItem{Description: description}
+	callback.Set("{$url}", &pathitem)
+
+	return &callback
+}
+
 func buildEmptyOrderMapForOrderedCallbacks() OrderedMap {
 	return OrderedMap{
-		filter: MatchNonEmptyKeys,
+		filter:    MatchNonEmptyKeys,
+		normalize: NOPNormalizer,
 	}
 }
 
 func buildOrderMapForOrderedCallbacks() OrderedMap {
 	return OrderedMap{
 		data: map[string]interface{}{
-			"skipParam":  &Callback{Description: "default parameter"},
-			"limitParam": &Callback{Description: "OK"},
+			"skipParam":  buildCallback("default parameter"),
+			"limitParam": buildCallback("OK"),
 		},
 		keys: []string{
 			"skipParam",
 			"limitParam",
 		},
-		filter: MatchNonEmptyKeys,
+		filter:    MatchNonEmptyKeys,
+		normalize: NOPNormalizer,
 	}
 }
 
@@ -456,4 +501,3 @@ func buildOrderedCallbacksFixture() OrderedCallbacks {
 
 	return m
 }
-*/

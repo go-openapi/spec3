@@ -1,9 +1,5 @@
 package spec3
 
-/*
-
-// FIXME: Fix the test cases
-
 import (
 	"reflect"
 	"testing"
@@ -205,9 +201,9 @@ func TestOrderedSchemas_Keys(t *testing.T) {
 }
 
 func buildSchema(value string) *Schema {
-	orderedMap := OrderedMap{}
-	orderedMap.Set("x-some-key", value)
-	return &Schema{VendorExtensible{Extensions{orderedMap}}, Reference{}}
+	extensions := Extensions{}
+	extensions.Set("x-some-key", value)
+	return &Schema{VendorExtensible{extensions}, Reference{}}
 }
 
 func buildEmptyOrderMapForOrderedSchemas() OrderedMap {
@@ -237,4 +233,3 @@ func buildOrderedSchemasFixture() OrderedSchemas {
 
 	return m
 }
-*/
