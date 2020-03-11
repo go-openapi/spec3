@@ -95,7 +95,7 @@ func easyjson22b57fa5DecodeGithubComGoOpenapiSpec31(in *jlexer.Lexer, out *Serve
 			continue
 		}
 		switch key {
-		case "Enum":
+		case "enum":
 			if in.IsNull() {
 				in.Skip()
 				out.Enum = nil
@@ -118,11 +118,11 @@ func easyjson22b57fa5DecodeGithubComGoOpenapiSpec31(in *jlexer.Lexer, out *Serve
 				}
 				in.Delim(']')
 			}
-		case "Default":
+		case "default":
 			out.Default = string(in.String())
-		case "Description":
+		case "description":
 			out.Description = string(in.String())
-		case "Extensions":
+		case "extensions":
 			(out.Extensions).UnmarshalEasyJSON(in)
 		default:
 			in.SkipRecursive()
@@ -138,12 +138,11 @@ func easyjson22b57fa5EncodeGithubComGoOpenapiSpec31(out *jwriter.Writer, in Serv
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
-		const prefix string = ",\"Enum\":"
+	if len(in.Enum) != 0 {
+		const prefix string = ",\"enum\":"
+		first = false
 		out.RawString(prefix[1:])
-		if in.Enum == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
-			out.RawString("null")
-		} else {
+		{
 			out.RawByte('[')
 			for v2, v3 := range in.Enum {
 				if v2 > 0 {
@@ -154,19 +153,34 @@ func easyjson22b57fa5EncodeGithubComGoOpenapiSpec31(out *jwriter.Writer, in Serv
 			out.RawByte(']')
 		}
 	}
-	{
-		const prefix string = ",\"Default\":"
-		out.RawString(prefix)
+	if in.Default != "" {
+		const prefix string = ",\"default\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Default))
 	}
-	{
-		const prefix string = ",\"Description\":"
-		out.RawString(prefix)
+	if in.Description != "" {
+		const prefix string = ",\"description\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Description))
 	}
-	{
-		const prefix string = ",\"Extensions\":"
-		out.RawString(prefix)
+	if true {
+		const prefix string = ",\"extensions\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		(in.Extensions).MarshalEasyJSON(out)
 	}
 	out.RawByte('}')
@@ -214,13 +228,13 @@ func easyjson22b57fa5DecodeGithubComGoOpenapiSpec32(in *jlexer.Lexer, out *Serve
 			continue
 		}
 		switch key {
-		case "URL":
+		case "url":
 			out.URL = string(in.String())
-		case "Description":
+		case "description":
 			out.Description = string(in.String())
-		case "Variables":
+		case "variables":
 			(out.Variables).UnmarshalEasyJSON(in)
-		case "Extensions":
+		case "extensions":
 			(out.Extensions).UnmarshalEasyJSON(in)
 		default:
 			in.SkipRecursive()
@@ -236,24 +250,40 @@ func easyjson22b57fa5EncodeGithubComGoOpenapiSpec32(out *jwriter.Writer, in Serv
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
-		const prefix string = ",\"URL\":"
+	if in.URL != "" {
+		const prefix string = ",\"url\":"
+		first = false
 		out.RawString(prefix[1:])
 		out.String(string(in.URL))
 	}
-	{
-		const prefix string = ",\"Description\":"
-		out.RawString(prefix)
+	if in.Description != "" {
+		const prefix string = ",\"description\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.String(string(in.Description))
 	}
-	{
-		const prefix string = ",\"Variables\":"
-		out.RawString(prefix)
+	if true {
+		const prefix string = ",\"variables\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		(in.Variables).MarshalEasyJSON(out)
 	}
-	{
-		const prefix string = ",\"Extensions\":"
-		out.RawString(prefix)
+	if true {
+		const prefix string = ",\"extensions\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		(in.Extensions).MarshalEasyJSON(out)
 	}
 	out.RawByte('}')
