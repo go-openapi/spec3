@@ -259,3 +259,61 @@ func decodeSortedMap(in *jlexer.Lexer, out *OrderedMap) {
 		in.Consumed()
 	}
 }
+
+// OrderedStrings is a map between a variable name and its value. The value is used for substitution in the server's URL template.
+type OrderedStrings struct {
+	data OrderedMap
+}
+
+// NewOrderedStrings creates a new instance of OrderedStrings with correct filter
+func NewOrderedStrings() OrderedStrings {
+	return OrderedStrings{
+		data: OrderedMap{
+			filter: MatchNonEmptyKeys, // TODO: check if keys are some regex or just any non empty string
+		},
+	}
+}
+
+// Get gets the security requirement by key
+func (s *OrderedStrings) Get(key string) *string {
+	v := s.data.Get(key)
+	if v == nil {
+		return nil
+	}
+	return v.(*string)
+}
+
+// GetOK checks if the key exists in the security requirement
+func (s *OrderedStrings) GetOK(key string) (*string, bool) {
+	v, ok := s.data.GetOK(key)
+	if !ok {
+		return nil, ok
+	}
+
+	sr, ok := v.(*string)
+	return sr, ok
+}
+
+// Set sets the value to the security requirement
+func (s *OrderedStrings) Set(key string, val *string) bool {
+	return s.data.Set(key, val)
+}
+
+// ForEach executes the function for each security requirement
+func (s *OrderedStrings) ForEach(fn func(string, *string) error) error {
+	s.data.ForEach(func(key string, val interface{}) error {
+		response, _ := val.(*string)
+		if err := fn(key, response); err != nil {
+			return err
+		}
+		return nil
+	})
+	return nil
+}
+
+// Keys gets the list of keys
+func (s *OrderedStrings) Keys() []string {
+	return s.data.Keys()
+}
+
+// TODO: (s *OrderedStrings) Implement Marshal & Unmarshal -> JSON, YAML

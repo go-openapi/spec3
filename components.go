@@ -5,13 +5,13 @@ package spec3
 type Components struct {
 	VendorExtensible
 
-	Schemas         map[string]Schema         `json:"schemas,omitempty"`
-	Responses       map[string]Response       `json:"responses,omitempty"`
-	Parameters      map[string]Parameter      `json:"parameters,omitempty"`
-	Examples        map[string]Example        `json:"examples,omitempty"`
-	RequestBodies   map[string]RequestBody    `json:"requestBodies,omitempty"`
-	Headers         map[string]Header         `json:"headers,omitempty"`
-	SecuritySchemes map[string]SecurityScheme `json:"securitySchemes,omitempty"`
-	Links           map[string]Link           `json:"links,omitempty"`
-	Callbacks       map[string]Callback       `json:"callbacks,omitempty"`
+	Schemas         OrderedSchemas         `json:"schemas,omitempty"`
+	Responses       OrderedResponses       `json:"responses,omitempty"`
+	Parameters      OrderedParameters      `json:"parameters,omitempty"`
+	Examples        OrderedExamples        `json:"examples,omitempty"`
+	RequestBodies   OrderedRequestBodies   `json:"requestBodies,omitempty"`
+	Headers         OrderedHeaders         `json:"headers,omitempty"`
+	SecuritySchemes OrderedSecuritySchemes `json:"securitySchemes,omitempty"`
+	Links           OrderedLinks           `json:"links,omitempty"`
+	Callbacks       OrderedCallbacks       `json:"callbacks,omitempty"`
 }

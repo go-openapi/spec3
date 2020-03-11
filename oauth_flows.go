@@ -14,8 +14,8 @@ type OAuthFlows struct {
 type OAuthFlow struct {
 	VendorExtensible
 
-	AuthorizationURL string            `json:"authorizationUrl,omitempty"`
-	TokenURL         string            `json:"tokenUrl,omitempty"`
-	RefreshURL       string            `json:"refreshUrl,omitempty"`
-	Scopes           map[string]string `json:"scopes,omitempty"`
+	AuthorizationURL string         `json:"authorizationUrl,omitempty"`
+	TokenURL         string         `json:"tokenUrl,omitempty"`
+	RefreshURL       string         `json:"refreshUrl,omitempty"`
+	Scopes           OrderedStrings `json:"scopes,omitempty"`
 }

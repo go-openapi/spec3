@@ -5,25 +5,25 @@ import (
 	jwriter "github.com/mailru/easyjson/jwriter"
 )
 
-// Responses is a container for the expected responses of an operation. The container maps a HTTP response code to the expected response.
-type Responses struct {
-	data OrderedMap
-}
-
 // Response describes a single response from an API Operation, including design-time, static links to operations based on the response.
 type Response struct {
 	VendorExtensible
 	Reference
 
-	Description string               `json:"description"`
-	Headers     map[string]Header    `json:"headers"`
-	Content     map[string]MediaType `json:"content"`
-	Links       map[string]Link      `json:"links"`
+	Description string            `json:"description"`
+	Headers     OrderedHeaders    `json:"headers"`
+	Content     OrderedMediaTypes `json:"content"`
+	Links       OrderedLinks      `json:"links"`
 }
 
-// NewResponses creates the new instance of the Responses with correct key-filter
-func NewResponses() Responses {
-	return Responses{
+// OrderedResponses is a container for the expected responses of an operation. The container maps a HTTP response code to the expected response.
+type OrderedResponses struct {
+	data OrderedMap
+}
+
+// NewOrderedResponses creates the new instance of the OrderedResponses with correct key-filter
+func NewOrderedResponses() OrderedResponses {
+	return OrderedResponses{
 		data: OrderedMap{
 			filter: matchResponseCode,
 		},
@@ -31,7 +31,7 @@ func NewResponses() Responses {
 }
 
 // Get gets the security requirement by key
-func (s *Responses) Get(key string) *Response {
+func (s *OrderedResponses) Get(key string) *Response {
 	v := s.data.Get(key)
 	if v == nil {
 		return nil
@@ -40,7 +40,7 @@ func (s *Responses) Get(key string) *Response {
 }
 
 // GetOK checks if the key exists in the security requirement
-func (s *Responses) GetOK(key string) (*Response, bool) {
+func (s *OrderedResponses) GetOK(key string) (*Response, bool) {
 	v, ok := s.data.GetOK(key)
 	if !ok {
 		return nil, ok
@@ -51,12 +51,12 @@ func (s *Responses) GetOK(key string) (*Response, bool) {
 }
 
 // Set sets the value to the security requirement
-func (s *Responses) Set(key string, val *Response) bool {
+func (s *OrderedResponses) Set(key string, val *Response) bool {
 	return s.data.Set(key, val)
 }
 
 // ForEach executes the function for each security requirement
-func (s *Responses) ForEach(fn func(string, *Response) error) error {
+func (s *OrderedResponses) ForEach(fn func(string, *Response) error) error {
 	s.data.ForEach(func(key string, val interface{}) error {
 		response, _ := val.(*Response)
 		if err := fn(key, response); err != nil {
@@ -68,31 +68,31 @@ func (s *Responses) ForEach(fn func(string, *Response) error) error {
 }
 
 // Keys gets the list of keys
-func (s *Responses) Keys() []string {
+func (s *OrderedResponses) Keys() []string {
 	return s.data.Keys()
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (s Responses) MarshalJSON() ([]byte, error) {
+func (s OrderedResponses) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	encodeSortedMap(&w, s.data)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (s Responses) MarshalEasyJSON(w *jwriter.Writer) {
+func (s OrderedResponses) MarshalEasyJSON(w *jwriter.Writer) {
 	encodeSortedMap(w, s.data)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (s *Responses) UnmarshalJSON(data []byte) error {
+func (s *OrderedResponses) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	decodeSortedMap(&r, &s.data)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (s *Responses) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (s *OrderedResponses) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	decodeSortedMap(l, &s.data)
 }
 
