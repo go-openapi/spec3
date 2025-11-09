@@ -2,6 +2,8 @@
 
 [![license](http://img.shields.io/badge/license-Apache%20v2-orange.svg)](https://raw.githubusercontent.com/go-openapi/spec3/master/LICENSE) [![GoDoc](https://godoc.org/github.com/go-openapi/spec3?status.svg)](http://godoc.org/github.com/go-openapi/spec3)
 
+**This project has been archived on 2025/11/09**
+
 ***This repository is not usable at this moment, the implementation is incomplete***
 
 The object model for OpenAPI specification v3 documents.
